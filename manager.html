@@ -1,0 +1,296 @@
+<!doctype html>
+<html>
+	<head>
+	<style>
+
+/* LAYOUT */
+
+.page {
+max-width:1000px;
+margin:0 auto;
+padding:1em;
+}
+textarea {
+min-width:480px;
+min-height:480px;
+padding:1em;
+}
+input[type="text"] {
+min-width:360px;
+padding:.5em;
+}
+
+.data-val {
+display:none;
+}
+.data-info {
+display:none;
+}
+label {
+display:block;
+float:left;
+width:100px;
+padding:.5em;
+}
+a {
+text-decoration:none;
+}
+
+.page2col .col {
+width:50%;
+float:left;
+}
+
+.page2col .col60 {
+width:60%;
+}
+.page2col .col40 {
+width:40%;
+}
+
+.page2col .col40 input[type="text"]{
+min-width:200px;
+}
+
+
+/* FONTS */
+
+body {
+font-size:14px;
+}
+div {
+font-size:1em;
+}
+input, textarea {
+font-family: monospace, sans-serif;
+font-size:1em;
+}
+
+	</style>
+<script type="text/javascript" src="jquery-2.1.0.min.js"></script> 
+<script type="text/javascript" src="base64_encode.js"></script> 
+<script type="text/javascript" src="base64_decode.js"></script> 
+<script type="text/javascript">
+var WParty={};
+
+WParty.act_go=function() {
+	WParty.ajax_url="http://" + jQuery(".form-site").val()+"/wp-admin/admin-ajax.php";
+	WParty.ajax_user=jQuery(".form-user").val();
+	WParty.ajax_password=jQuery(".form-password").val();
+	WParty.ajax_title=jQuery(".form-title").val();
+	WParty.ajax_content=jQuery(".form-content").val();
+	WParty.ajax_request={
+		"action": 	"wparty",
+		"up0": 	base64_encode(WParty.ajax_user),
+		"up1": base64_encode(WParty.ajax_password),
+		"title":	base64_encode(WParty.ajax_title),
+		"content":	base64_encode(WParty.ajax_content)
+	};
+	jQuery(".ajax-response")
+		.html("...")
+		.load(WParty.ajax_url, WParty.ajax_request);
+		
+	WParty.save_data("user", WParty.ajax_user);
+	WParty.save_data("password", WParty.ajax_password);
+	var now=new Date();
+	var now2time=now.toISOString();
+	WParty.save_data("request-"+now2time, WParty.ajax_request);
+	
+	WParty.local_data_load();
+};
+
+WParty.each_publish=function(index) {
+	if (typeof localStorage != 'undefined') {
+		var key=jQuery(this).data("key");
+		var	val=localStorage.getItem(key);
+		var request=JSON.parse(val);
+		WParty.ajax_request=request;
+
+		// OVERRIDE WITH CONNECTION INPUT	
+		WParty.ajax_url="http://" + jQuery(".form-site").val()+"/wp-admin/admin-ajax.php";
+		WParty.ajax_user=jQuery(".form-user").val();
+		WParty.ajax_password=jQuery(".form-password").val();
+		WParty.ajax_request.action="wparty";
+		WParty.ajax_request.up0=base64_encode(WParty.ajax_user);
+		WParty.ajax_request.up1=base64_encode(WParty.ajax_password);
+		
+		var title=base64_decode(WParty.ajax_request.title);
+		alert('publish: '+title+' / '+key);
+		jQuery(".ajax-response")
+			.html("...")
+			.load(WParty.ajax_url, WParty.ajax_request);
+	}
+};
+WParty.each_delete=function(index) {
+	if (typeof localStorage != 'undefined') {
+		var key=jQuery(this).data("key");
+		localStorage.removeItem(key);
+	}
+};
+
+WParty.act_publish_selection=function() {
+	jQuery(".data-check:checked").each(WParty.each_publish);
+};
+
+WParty.act_delete_selection=function() {
+	jQuery(".data-check:checked").each(WParty.each_delete);
+	WParty.local_data_load();
+};
+
+WParty.last_request='';
+WParty.act_save=function() {
+	WParty.ajax_url="http://" + jQuery(".form-site").val()+"/wp-admin/admin-ajax.php";
+	WParty.ajax_user=jQuery(".form-user").val();
+	WParty.ajax_password=jQuery(".form-password").val();
+	WParty.ajax_title=jQuery(".form-title").val();
+	WParty.ajax_content=jQuery(".form-content").val();
+	WParty.ajax_request={
+		"action": 	"wparty",
+		"up0": 	base64_encode(WParty.ajax_user),
+		"up1": base64_encode(WParty.ajax_password),
+		"title":	base64_encode(WParty.ajax_title),
+		"content":	base64_encode(WParty.ajax_content)
+	};
+		
+	WParty.save_data("user", WParty.ajax_user);
+	WParty.save_data("password", WParty.ajax_password);
+	var now=new Date();
+	var now2time=now.toISOString();
+	WParty.last_request="request-"+now2time;
+	WParty.save_data(WParty.last_request, WParty.ajax_request);
+	
+	WParty.local_data_load();
+};
+
+WParty.act_reset=function() {
+	if (typeof localStorage != 'undefined') {
+		localStorage.clear();
+		WParty.local_data_load();
+	}
+};
+WParty.act_load=function() {
+	if (typeof localStorage != 'undefined') {
+		//WParty.auto_save();
+		
+		var key=jQuery(this).data("key");
+		var	val=localStorage.getItem(key);
+		var request=JSON.parse(val);
+		WParty.fill_form(request);
+	}
+};
+WParty.fill_form=function(request) {
+	if (request) {
+		jQuery(".form-title").val(base64_decode(request.title));
+		jQuery(".form-content").val(base64_decode(request.content));
+	}
+};
+
+WParty.local_data_load=function() {
+	if (typeof localStorage != 'undefined') {
+		jQuery(".local-data").html("");
+		var key;
+		var val;
+		var title;
+		var request;
+		for (i=0; i<localStorage.length; i++) {
+			key=localStorage.key(i);
+			val=localStorage.getItem(key);
+			request=JSON.parse(val);
+			if (typeof request === 'object') {
+				title=base64_decode(request.title);
+				html=	'<div class="data-request">'
+						+'&nbsp;&nbsp;<a class="act-load" title="'+key+'" data-key="'+key+'" href="#load">[edit]</a>'
+						+'&nbsp;&nbsp;<input class="data-check" type="checkbox" data-key="'+key+'">'
+						+'&nbsp;&nbsp;<a class="act-load" title="'+key+'" data-key="'+key+'" href="#load"><strong>'+title+'</strong></a>'
+						+'</div>'
+						+'<div class="data-val">'+val+'</div>';
+			}
+			else {
+				html='<div class="data-info">'+key+':'+val+'</div>';
+			}
+			jQuery(".local-data").prepend(html);
+		}
+	}
+};
+WParty.save_data=function(key, val) {
+	if (typeof localStorage != 'undefined') {
+		localStorage.setItem(key, JSON.stringify(val));
+	}
+};
+WParty.remove_data=function(key) {
+	if (typeof localStorage != 'undefined') {
+		localStorage.removeItem(key);
+	}
+};
+
+WParty.auto_delay=60000; // 1 minute
+WParty.auto_save_last='';
+WParty.auto_save=function() {
+	WParty.act_save();
+	
+	// keep the last for next auto save
+	WParty.auto_save_now=base64_encode(JSON.stringify(WParty.ajax_request));
+	if (WParty.auto_save_now != WParty.auto_save_last) {
+		WParty.auto_save_last=WParty.auto_save_now;
+	}
+	else {
+		WParty.remove_data(WParty.last_request);
+	}
+	
+};
+
+WParty.jinit=function() {
+	jQuery(".act-save").on("click", WParty.act_save);
+	jQuery(".act-go").on("click", WParty.act_go);
+	jQuery(".act-reset").on("click", WParty.act_reset);
+	jQuery(".act-publish-selection").on("click", WParty.act_publish_selection);
+	jQuery(".act-delete-selection").on("click", WParty.act_delete_selection);
+	
+	jQuery(".local-data").on("click", ".act-load", WParty.act_load);
+	
+	WParty.local_data_load();
+	setInterval(WParty.auto_save, WParty.auto_delay);	
+};
+
+jQuery(WParty.jinit);
+
+</script> 
+	</head>
+	<body>
+	<div class="page page2col">
+
+	<!--COL1-->
+	<div class="col col60">
+<div><label>Page Title</label><input class="form-title" type="text" name="form-title" value="title"></div>
+<div><textarea class="form-content" name="form-content">
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+</textarea></div>
+	</div>
+	<!--COL2-->
+	<div class="col col40">
+<hr>
+<div><a href="#save" class="act-save">SAVE</a></div>
+<hr>
+<div><a href="#go" class="act-go">PUBLISH</a></div>
+<hr>
+<div class="ajax-response"></div>
+<hr>
+<div><label>Website</label><input class="form-site" type="text" name="form-site" value="dev002.local"></div>
+<div><label>Login</label><input class="form-user" type="text" name="form-user" value="webmaster"></div>
+<div><label>Password</label><input class="form-password" type="text" name="form-password" value="webmaster"></div>
+<hr>
+<div><a href="#publish-selection" class="act-publish-selection">PUBLISH SELECTION</a></div>
+<hr>
+<div class="local-data"></div>
+<hr>
+<div><a href="#delete-selection" class="act-delete-selection">DELETE SELECTION</a></div>
+<div><a href="#reset" class="act-reset">DELETE ALL!</a></div>
+	</div>
+		
+	</div>
+	</body>
+</html>
