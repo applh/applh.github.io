@@ -88,6 +88,12 @@ font-family: monospace, sans-serif;
 font-size:1em;
 }
 
+@media print {
+	.page-editor {
+	display:none;
+	}
+}
+
 	</style>
 <script type="text/javascript" src="jquery-2.1.0.min.js"></script> 
 <script type="text/javascript" src="base64_encode.js"></script> 
@@ -522,7 +528,7 @@ jQuery(WParty.jinit2);
 	
 	</div>
 	
-	<div class="page page2col">
+	<div class="page page2col page-editor">
 
 	<!--COL1-->
 	<div class="col col60">
