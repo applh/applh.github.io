@@ -1,8 +1,9 @@
 CACHE MANIFEST
 
-# version V1.0
+# version V1.1
 
-index.html
-base64_encode.js
-base64_decode.js
-jquery-2.1.0.min.js
+/index.html
+/a/index.html
+/base64_encode.js
+/base64_decode.js
+/jquery-2.1.0.min.js
