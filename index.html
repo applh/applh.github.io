@@ -44,6 +44,9 @@ width:50%;
 float:left;
 }
 
+.page2col .col100 {
+width:100%;
+}
 .page2col .col70 {
 width:70%;
 }
@@ -55,6 +58,9 @@ width:40%;
 }
 .page2col .col30 {
 width:30%;
+}
+.page2col .col20 {
+width:20%;
 }
 
 .page2col .col40 input[type="text"]{
@@ -73,6 +79,10 @@ padding-left:.5em;
 
 .topic-content {
 padding-left:1em;
+}
+
+.specs-toc .section > div {
+cursor:pointer;
 }
 
 /* FONTS */
@@ -462,7 +472,21 @@ jQuery(WParty.jinit2);
 	<body>
 	<div class="page page2col">
 	<!--COL1-->
-	<div class="col col30">
+	<div class="col col60">
+<div><h2>Specifications</h2></div>
+<div class="specs-editor">
+<div><h3 class="specs-edit-title">//</h3></div>
+<div><textarea class="form-specs-content" name="form-specs-content">
+</textarea></div>
+</div>
+<div class="specs-stats">
+</div>
+<div class="specs-toolbar">
+<a href="#specs-publish" class="act_specs_publish">PUBLIER LES SPECIFICATIONS</a>
+</div>
+	</div>
+	<!--COL2-->
+	<div class="col col20">
 <div class="specs-toc">
 <div class="section">
 	<h3 data-specs="project">Projet</h3>
@@ -495,6 +519,11 @@ jQuery(WParty.jinit2);
 	<div data-specs="standards">Standards</div>
 	<div data-specs="technos">Technos</div>
 </div>
+</div>
+	</div>
+	<!--COL3-->
+	<div class="col col20">
+<div class="specs-toc">
 <div class="section">
 	<h3>Développement</h3>
 	<div data-specs="design">Design</div>
@@ -532,23 +561,10 @@ jQuery(WParty.jinit2);
 </div>
 </div>
 	</div>
-	<!--COL2-->
-	<div class="col col70">
-<div><h2>Specifications</h2></div>
-<div class="specs-editor">
-<div><h3 class="specs-edit-title">//</h3></div>
-<div><textarea class="form-specs-content" name="form-specs-content">
-</textarea></div>
-</div>
-<div class="specs-stats">
-</div>
-<div class="specs-toolbar">
-<a href="#specs-publish" class="act_specs_publish">PUBLIER LES SPECIFICATIONS</a>
-</div>
-<div class="specs-resume">
-</div>
+<div class="col col100">
+	<div class="specs-resume">
 	</div>
-	
+</div>
 	</div>
 	
 	<div class="page page2col page-editor">
