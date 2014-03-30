@@ -79,6 +79,7 @@ padding-left:.5em;
 
 .topic-content {
 padding-left:1em;
+padding-right:1em;
 }
 
 .specs-toc .section > div {
@@ -90,15 +91,31 @@ cursor:pointer;
 body {
 font-size:14px;
 }
+h2, h3, h4 {
+font-family: Verdana,Sans-Serif;
+}
 div {
 font-size:1em;
+font-family: "Times New Roman",Georgia,Serif;
 }
+
 input, textarea {
 font-family: monospace, sans-serif;
 font-size:1em;
 }
 
 @media print {
+	body {
+	font-size:20px;
+	}
+	h3 {
+	font-size:3em;
+	page-break-after:always;
+	}
+	h4 {
+	font-size:2em;
+	}
+
 	.page-editor {
 	display:none;
 	}
@@ -118,6 +135,8 @@ font-size:1em;
 	}
 	.specs-resume .topic {
 	page-break-after:always;
+	margin-top:1em;
+	margin-bottom:1em;
 	}
 	.page2col .col {
 	width:100%;
