@@ -1,0 +1,561 @@
+<!doctype html>
+<html>
+	<head>
+	<meta charset="UTF-8" />
+	<style>
+
+/* LAYOUT */
+
+.page {
+max-width:1000px;
+margin:0 auto;
+padding:1em;
+clear:both;
+margin-bottom:2em;
+}
+textarea {
+min-width:480px;
+min-height:480px;
+padding:1em;
+}
+input[type="text"] {
+min-width:360px;
+padding:.5em;
+}
+
+.data-val {
+display:none;
+}
+.data-info {
+display:none;
+}
+label {
+display:block;
+float:left;
+width:100px;
+padding:.5em;
+}
+a {
+text-decoration:none;
+}
+
+.page2col .col {
+width:50%;
+float:left;
+}
+
+.page2col .col70 {
+width:70%;
+}
+.page2col .col60 {
+width:60%;
+}
+.page2col .col40 {
+width:40%;
+}
+.page2col .col30 {
+width:30%;
+}
+
+.page2col .col40 input[type="text"]{
+min-width:200px;
+}
+
+.topic {
+border:1px #aaaaaa solid;
+padding-bottom:.5em;
+margin-bottom:.5em;
+}
+
+.topic h4 {
+padding-left:.5em;
+}
+
+.topic-content {
+padding-left:1em;
+}
+
+/* FONTS */
+
+body {
+font-size:14px;
+}
+div {
+font-size:1em;
+}
+input, textarea {
+font-family: monospace, sans-serif;
+font-size:1em;
+}
+
+	</style>
+<script type="text/javascript" src="jquery-2.1.0.min.js"></script> 
+<script type="text/javascript" src="base64_encode.js"></script> 
+<script type="text/javascript" src="base64_decode.js"></script> 
+<script type="text/javascript">
+var WParty={};
+
+WParty.act_go=function() {
+	WParty.ajax_url="http://" + jQuery(".form-site").val()+"/wp-admin/admin-ajax.php";
+	WParty.ajax_user=jQuery(".form-user").val();
+	WParty.ajax_password=jQuery(".form-password").val();
+	WParty.ajax_title=jQuery(".form-title").val();
+	WParty.ajax_content=jQuery(".form-content").val();
+	WParty.ajax_request={
+		"action": 	"wparty",
+		"up0": 	base64_encode(WParty.ajax_user),
+		"up1": base64_encode(WParty.ajax_password),
+		"title":	base64_encode(WParty.ajax_title),
+		"content":	base64_encode(WParty.ajax_content)
+	};
+	jQuery(".ajax-response")
+		.html("...")
+		.load(WParty.ajax_url, WParty.ajax_request);
+		
+	WParty.save_data("user", WParty.ajax_user);
+	WParty.save_data("password", WParty.ajax_password);
+	var now=new Date();
+	var now2time=now.toISOString();
+	WParty.save_data("request-"+now2time, WParty.ajax_request);
+	
+	WParty.local_data_load();
+};
+
+WParty.each_publish=function(index) {
+	if (typeof localStorage != 'undefined') {
+		var key=jQuery(this).data("key");
+		var	val=localStorage.getItem(key);
+		var request=JSON.parse(val);
+		WParty.ajax_request=request;
+
+		// OVERRIDE WITH CONNECTION INPUT	
+		WParty.ajax_url="http://" + jQuery(".form-site").val()+"/wp-admin/admin-ajax.php";
+		WParty.ajax_user=jQuery(".form-user").val();
+		WParty.ajax_password=jQuery(".form-password").val();
+		WParty.ajax_request.action="wparty";
+		WParty.ajax_request.up0=base64_encode(WParty.ajax_user);
+		WParty.ajax_request.up1=base64_encode(WParty.ajax_password);
+		
+		var title=base64_decode(WParty.ajax_request.title);
+		alert('publish: '+title+' / '+key);
+		jQuery(".ajax-response")
+			.html("...")
+			.load(WParty.ajax_url, WParty.ajax_request);
+	}
+};
+WParty.each_delete=function(index) {
+	if (typeof localStorage != 'undefined') {
+		var key=jQuery(this).data("key");
+		localStorage.removeItem(key);
+	}
+};
+
+WParty.act_publish_selection=function() {
+	jQuery(".data-check:checked").each(WParty.each_publish);
+};
+
+WParty.act_delete_selection=function() {
+	jQuery(".data-check:checked").each(WParty.each_delete);
+	WParty.local_data_load();
+};
+
+WParty.last_request='';
+WParty.act_save=function() {
+	WParty.ajax_url="http://" + jQuery(".form-site").val()+"/wp-admin/admin-ajax.php";
+	WParty.ajax_user=jQuery(".form-user").val();
+	WParty.ajax_password=jQuery(".form-password").val();
+	WParty.ajax_title=jQuery(".form-title").val();
+	WParty.ajax_content=jQuery(".form-content").val();
+	WParty.ajax_request={
+		"action": 	"wparty",
+		"up0": 	base64_encode(WParty.ajax_user),
+		"up1": base64_encode(WParty.ajax_password),
+		"title":	base64_encode(WParty.ajax_title),
+		"content":	base64_encode(WParty.ajax_content)
+	};
+		
+	WParty.save_data("user", WParty.ajax_user);
+	WParty.save_data("password", WParty.ajax_password);
+	var now=new Date();
+	var now2time=now.toISOString();
+	WParty.last_request="request-"+now2time;
+	WParty.save_data(WParty.last_request, WParty.ajax_request);
+	
+	WParty.local_data_load();
+};
+
+WParty.act_reset=function() {
+	if (typeof localStorage != 'undefined') {
+		localStorage.clear();
+		WParty.local_data_load();
+	}
+};
+WParty.act_load=function() {
+	if (typeof localStorage != 'undefined') {
+		//WParty.auto_save();
+		
+		var key=jQuery(this).data("key");
+		var	val=localStorage.getItem(key);
+		var request=JSON.parse(val);
+		WParty.fill_form(request);
+	}
+};
+WParty.fill_form=function(request) {
+	if (request) {
+		jQuery(".form-title").val(base64_decode(request.title));
+		jQuery(".form-content").val(base64_decode(request.content));
+	}
+};
+
+WParty.local_data_load=function() {
+	if (typeof localStorage != 'undefined') {
+		jQuery(".local-data").html("");
+		var key;
+		var val;
+		var title;
+		var request;
+		for (i=0; i<localStorage.length; i++) {
+			key=localStorage.key(i);
+			val=localStorage.getItem(key);
+			request=JSON.parse(val);
+			if (typeof request === 'object') {
+				title=base64_decode(request.title);
+				html=	'<div class="data-request">'
+						+'&nbsp;&nbsp;<a class="act-load" title="'+key+'" data-key="'+key+'" href="#load">[edit]</a>'
+						+'&nbsp;&nbsp;<input class="data-check" type="checkbox" data-key="'+key+'">'
+						+'&nbsp;&nbsp;<a class="act-load" title="'+key+'" data-key="'+key+'" href="#load"><strong>'+title+'</strong></a>'
+						+'</div>'
+						+'<div class="data-val">'+val+'</div>';
+			}
+			else {
+				html='<div class="data-info">'+key+':'+val+'</div>';
+			}
+			jQuery(".local-data").prepend(html);
+		}
+	}
+};
+WParty.save_data=function(key, val) {
+	if (typeof localStorage != 'undefined') {
+		localStorage.setItem(key, JSON.stringify(val));
+	}
+};
+WParty.remove_data=function(key) {
+	if (typeof localStorage != 'undefined') {
+		localStorage.removeItem(key);
+	}
+};
+
+WParty.auto_delay=60000; // 1 minute
+WParty.auto_save_last='';
+WParty.auto_save=function() {
+	WParty.act_save();
+	
+	// keep the last for next auto save
+	WParty.auto_save_now=base64_encode(JSON.stringify(WParty.ajax_request));
+	if (WParty.auto_save_now != WParty.auto_save_last) {
+		WParty.auto_save_last=WParty.auto_save_now;
+	}
+	else {
+		WParty.remove_data(WParty.last_request);
+	}
+	
+};
+
+WParty.jinit=function() {
+	jQuery(".act-save").on("click", WParty.act_save);
+	jQuery(".act-go").on("click", WParty.act_go);
+	jQuery(".act-reset").on("click", WParty.act_reset);
+	jQuery(".act-publish-selection").on("click", WParty.act_publish_selection);
+	jQuery(".act-delete-selection").on("click", WParty.act_delete_selection);
+	
+	jQuery(".local-data").on("click", ".act-load", WParty.act_load);
+	
+	WParty.local_data_load();
+	setInterval(WParty.auto_save, WParty.auto_delay);	
+};
+
+jQuery(WParty.jinit);
+
+/* SPECS */
+
+WParty.specs_request=null;
+WParty.specs_last_request="";
+WParty.specs_content="";
+WParty.specs_edit="";
+
+WParty.specs_save_form=function() {
+	if (WParty.specs_edit == "") return;
+	 
+	WParty.specs_content=jQuery(".form-specs-content").val();
+	WParty.specs_request={
+		"specs": 	WParty.specs_edit,
+		"content":	base64_encode(WParty.specs_content)
+	};
+		
+	WParty.specs_last_request=WParty.specs_edit;
+	//alert(WParty.specs_last_request+"\n"+WParty.specs_content);
+	WParty.save_data(WParty.specs_last_request, WParty.specs_request);
+};
+
+WParty.specs_fill_form=function(request) {
+	if (request) {
+		jQuery(".form-specs-content").val(base64_decode(request.content));
+	}
+	else {
+		jQuery(".form-specs-content").val('');
+	}
+};
+
+WParty.specs_load=function(key, specs_title) {
+	jQuery(".specs-edit-title").html(specs_title);
+	WParty.specs_save_form();
+
+	if (typeof localStorage != 'undefined') {		
+		var	val=localStorage.getItem(key);
+		var request=JSON.parse(val);
+		WParty.specs_fill_form(request);
+		WParty.specs_edit=key;
+	}
+};
+WParty.act_specs_load=function() {
+	var specs_title=jQuery(this).html();
+	var key="specs-"+jQuery(this).data("specs");
+	WParty.specs_load(key, specs_title);
+
+	WParty.specs_resume();
+};
+
+WParty.specs_html='';
+WParty.specs_html_section='';
+WParty.specs_topic=function() {
+	var key="specs-"+jQuery(this).data("specs");
+	var topic=jQuery(this).html();
+	if (typeof localStorage != 'undefined') {		
+		var	val=localStorage.getItem(key);
+		var request=JSON.parse(val);
+		var content='';
+		if (request) {
+			content=base64_decode(request.content);
+		}
+		if (content) {
+			content=jQuery.trim(content);
+			content=content.replace(/\n/g, "<br>");
+			WParty.specs_html_section += 
+				'<div class="topic">'+"\n"
+					+'<h4>'+topic+'</h4>'+"\n"
+					+'<div class="topic-content">'+content+'</div>'+"\n"
+				+'</div>'+"\n";
+				
+			WParty.specs_stats_current++;
+		}
+		WParty.specs_stats_total++;
+	}
+};
+WParty.specs_section=function() {
+	WParty.specs_html_section='';
+	var title=jQuery(this).find("h3").html();
+	jQuery(this).find("div").each(WParty.specs_topic);
+	if (WParty.specs_html_section != "")
+		WParty.specs_html_section='<h3>'+title+'</h3>'+"\n"+WParty.specs_html_section;
+		
+	WParty.specs_html+=WParty.specs_html_section;
+	WParty.specs_stats_current_size+=WParty.specs_html_section.length;
+};
+
+WParty.specs_stats_html='';
+WParty.specs_stats_current=0;
+WParty.specs_stats_total=100;
+WParty.specs_stats_current_size=0;
+WParty.specs_stats_total_size=100;
+
+WParty.specs_stats=function() {
+    var curlevel=0;
+    if (WParty.specs_stats_total > 0)
+    	curlevel=Math.round(100*WParty.specs_stats_current/WParty.specs_stats_total);
+
+	WParty.specs_stats_total_size=1000*WParty.specs_stats_total;
+    var curlevel2=0;
+    if (WParty.specs_stats_total_size > 0)
+    	curlevel2=Math.round(100*WParty.specs_stats_current_size/WParty.specs_stats_total_size);
+    	
+	WParty.specs_stats_html=
+		'<div><strong>Specifications Completion: '
+		+ WParty.specs_stats_current + '/' + WParty.specs_stats_total
+		+' ('+curlevel+'%)</strong></div>';
+	WParty.specs_stats_html+=
+		'<div><strong>Content Completion: '
+		+ WParty.specs_stats_current_size + '/' + WParty.specs_stats_total_size
+		+' ('+curlevel2+'%)</strong></div>';
+
+	jQuery(".specs-stats").html(WParty.specs_stats_html);
+};
+
+WParty.specs_resume=function() {
+	// reset
+	WParty.specs_stats_total=0;
+	WParty.specs_stats_current=0;
+	
+	WParty.specs_stats_total_size=0;
+	WParty.specs_stats_current_size=0;	
+	
+	WParty.specs_html='';
+	
+	jQuery(".specs-toc .section").each(WParty.specs_section);
+	jQuery(".specs-resume").html(WParty.specs_html);
+
+	WParty.specs_stats();
+};
+
+
+WParty.act_specs_publish=function() {
+	// GET THE LATEST VERSION
+	WParty.specs_save_form();
+	WParty.specs_resume();
+	
+	var resume=jQuery(".specs-resume").html();
+	jQuery(".form-title").val("SPECIFICATIONS");
+	jQuery(".form-content").val(resume);
+	
+	WParty.act_go();
+};
+
+
+WParty.jinit2=function() {
+	WParty.specs_load("specs-objectives", "Objectifs");
+	jQuery(".section div").click(WParty.act_specs_load);
+	WParty.specs_resume();
+	
+	jQuery(".act_specs_publish").click(WParty.act_specs_publish);
+};
+
+jQuery(WParty.jinit2);
+
+</script> 
+	</head>
+	<body>
+	<div class="page page2col">
+	<!--COL1-->
+	<div class="col col30">
+<div class="specs-toc">
+<div class="section">
+	<h3 data-specs="project">Projet</h3>
+	<div data-specs="objectives">Objectifs</div>
+	<div data-specs="actors">Acteurs</div>
+	<div data-specs="media">Media</div>
+	<div data-specs="steps">Etapes</div>
+	<div data-specs="tasks">Tâches</div>
+	<div data-specs="costs">Coûts</div>
+	<div data-specs="risks">Risques</div>
+	<div data-specs="reports">Compte-Rendus</div>
+	<div data-specs="documents">Documents</div>
+</div>
+<div class="section">
+	<h3>Public</h3>
+	<div data-specs="news">News</div>
+	<div data-specs="inspiration">Inspiration</div>
+	<div data-specs="concurrents">Concurrents</div>
+	<div data-specs="social">Social</div>
+</div>
+<div class="section">
+	<h3>Pages</h3>
+	<div data-specs="accueil">Accueil</div>
+	<div data-specs="forms">Formulaires</div>
+	<div data-specs="navigation">Navigation</div>
+	<div data-specs="layout">Mise en Page</div>
+	<div data-specs="colors">Couleurs</div>
+	<div data-specs="fonts">Polices</div>
+	<div data-specs="seo">Référencement</div>
+	<div data-specs="standards">Standards</div>
+	<div data-specs="technos">Technos</div>
+</div>
+<div class="section">
+	<h3>Développement</h3>
+	<div data-specs="design">Design</div>
+	<div data-specs="creation">Création</div>
+	<div data-specs="integration">Intégration</div>
+	<div data-specs="validation">Validation</div>
+	<div data-specs="publication">Publication</div>
+	<div data-specs="monitoring">Monitoring</div>
+</div>
+<div class="section">
+	<h3>Scénarios</h3>
+	<div data-specs="novice">Novice</div>
+	<div data-specs="smart">Smart</div>
+	<div data-specs="expert">Expert</div>
+</div>
+<div class="section">
+	<h3>Priorités</h3>
+	<div data-specs="urgent">Urgent</div>
+	<div data-specs="medium">Medium</div>
+	<div data-specs="waiting">En Attente</div>
+</div>
+<div class="section">
+	<h3>Timeline</h3>
+	<div data-specs="years">Années</div>
+	<div data-specs="months">Mois</div>
+	<div data-specs="weeks">Semaines</div>
+	<div data-specs="days">Jours</div>
+	<div data-specs="hours">Heures</div>
+</div>
+<div class="section">
+	<h3>Business Plan</h3>
+	<div data-specs="optimist">Scénario Optimiste</div>
+	<div data-specs="realistics">Scénario Réaliste</div>
+	<div data-specs="pessimist">Scénario Pessimiste</div>
+</div>
+</div>
+	</div>
+	<!--COL2-->
+	<div class="col col70">
+<div><h2>Specifications</h2></div>
+<div><h3 class="specs-edit-title">//</h3></div>
+<div><textarea class="form-specs-content" name="form-specs-content">
+</textarea></div>
+<div class="specs-stats">
+</div>
+<div class="specs-toolbar">
+<a href="#specs-publish" class="act_specs_publish">PUBLISH SPECIFICATIONS</a>
+</div>
+<div class="specs-resume">
+</div>
+	</div>
+	
+	</div>
+	
+	<div class="page page2col">
+
+	<!--COL1-->
+	<div class="col col60">
+<div><label>Page Title</label><input class="form-title" type="text" name="form-title" value="title"></div>
+<div><textarea class="form-content" name="form-content">
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+</textarea></div>
+	</div>
+	<!--COL2-->
+	<div class="col col40">
+<hr>
+<div><a href="#save" class="act-save">SAVE</a></div>
+<hr>
+<div><a href="#go" class="act-go">PUBLISH</a></div>
+<hr>
+<div class="ajax-response"></div>
+<hr>
+<div><label>Website</label><input class="form-site" type="text" name="form-site" value="dev002.local"></div>
+<div><label>Login</label><input class="form-user" type="text" name="form-user" value="webmaster"></div>
+<div><label>Password</label><input class="form-password" type="text" name="form-password" value="webmaster"></div>
+<hr>
+<div><a href="#publish-selection" class="act-publish-selection">PUBLISH SELECTION</a></div>
+<hr>
+<div class="local-data"></div>
+<hr>
+<div><a href="#delete-selection" class="act-delete-selection">DELETE SELECTION</a></div>
+<div><a href="#reset" class="act-reset">DELETE ALL!</a></div>
+	</div>
+		
+	</div>
+	</body>
+</html>
