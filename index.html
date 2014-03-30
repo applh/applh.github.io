@@ -5,11 +5,15 @@
 	<style>
 
 /* LAYOUT */
-
+body {
+padding:0px;
+margin:0px;
+}
 .page {
 max-width:1000px;
 margin:0 auto;
-padding:1em;
+padding-top:0em;
+padding-bottom:2em;
 clear:both;
 margin-bottom:2em;
 }
@@ -84,6 +88,10 @@ padding-right:1em;
 
 .specs-toc .section > div {
 cursor:pointer;
+}
+
+.footer {
+padding:1em;
 }
 
 /* FONTS */
@@ -327,7 +335,11 @@ WParty.jinit=function() {
 	jQuery(".local-data").on("click", ".act-load", WParty.act_load);
 	
 	WParty.local_data_load();
-	setInterval(WParty.auto_save, WParty.auto_delay);	
+	setInterval(WParty.auto_save, WParty.auto_delay);
+	
+	var w=jQuery(window).width();
+	var h=jQuery(window).height();
+	jQuery(".footer").html(w+"x"+h);	
 };
 
 jQuery(WParty.jinit);
@@ -624,6 +636,8 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 <div><a href="#reset" class="act-reset">TOUT SUPPRIMER!</a></div>
 	</div>
 		
+	</div>
+	<div class="page footer">
 	</div>
 	</body>
 </html>
