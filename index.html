@@ -1,6 +1,7 @@
 <!doctype html>
 <html manifest="cache.manifest">
 	<head>
+	<title>WEBSTART</title>
 	<meta charset="UTF-8" />
 	<style>
 
@@ -159,6 +160,7 @@ font-size:1em;
 <script type="text/javascript" src="jquery-2.1.0.min.js"></script> 
 <script type="text/javascript" src="base64_encode.js"></script> 
 <script type="text/javascript" src="base64_decode.js"></script> 
+<script type="text/javascript" src="FileSaver.js"></script> 
 <script type="text/javascript">
 var WParty={};
 
@@ -328,12 +330,21 @@ WParty.auto_save=function() {
 	
 };
 
+WParty.act_save_file=function() {
+	var title=jQuery(".form-title").val();
+	var txt=jQuery(".form-content").val();
+	var blob = new Blob([txt], {type: "text/plain;charset=utf-8"});
+	saveAs(blob, title+".txt");
+}
+
 WParty.jinit=function() {
 	jQuery(".act-save").on("click", WParty.act_save);
 	jQuery(".act-go").on("click", WParty.act_go);
 	jQuery(".act-reset").on("click", WParty.act_reset);
 	jQuery(".act-publish-selection").on("click", WParty.act_publish_selection);
 	jQuery(".act-delete-selection").on("click", WParty.act_delete_selection);
+
+	jQuery(".act-save-file").on("click", WParty.act_save_file);
 	
 	jQuery(".local-data").on("click", ".act-load", WParty.act_load);
 	
@@ -353,6 +364,20 @@ WParty.specs_request=null;
 WParty.specs_last_request="";
 WParty.specs_content="";
 WParty.specs_edit="";
+
+WParty.act_specs_save_file=function() {
+	// GET THE LATEST VERSION
+	WParty.specs_save_form();
+	WParty.specs_resume();
+
+	var title="cahier-des-charges";
+	var model=jQuery(".form-specs-model").val();
+	var resume=jQuery(".specs-resume").html();
+	var content=model.replace(/CONTENT/, resume);
+	var blob = new Blob([content], {type: "text/plain;charset=utf-8"});
+	saveAs(blob, title+".html");
+}
+
 
 WParty.specs_save_form=function() {
 	if (WParty.specs_edit == "") return;
@@ -497,6 +522,7 @@ WParty.jinit2=function() {
 	WParty.specs_resume();
 	
 	jQuery(".act_specs_publish").click(WParty.act_specs_publish);
+	jQuery(".act_specs_save_file").click(WParty.act_specs_save_file);
 };
 
 jQuery(WParty.jinit2);
@@ -516,7 +542,8 @@ jQuery(WParty.jinit2);
 <div class="specs-stats">
 </div>
 <div class="specs-toolbar">
-<a href="#specs-publish" class="act_specs_publish">PUBLIER LES SPECIFICATIONS</a>
+<div><a href="#specs-save-file" class="act_specs_save_file">EXPORTER DANS UN FICHIER</a></div>
+<div><a href="#specs-publish" class="act_specs_publish">PUBLIER LES SPECIFICATIONS</a></div>
 </div>
 	</div>
 	<!--COL2-->
@@ -623,7 +650,9 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 <hr>
 <div><a href="#save" class="act-save">ENREGISTRER</a></div>
 <hr>
-<div><a href="#go" class="act-go">PUBLIER</a></div>
+<div><a href="#save-file" class="act-save-file">EXPORTER DANS UN FICHIER</a></div>
+<hr>
+<div><a href="#go" class="act-go">PUBLIER VERS WORDPRESS</a></div>
 <hr>
 <div class="ajax-response"></div>
 <hr>
@@ -640,7 +669,100 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 	</div>
 		
 	</div>
+	<div class="page specs-model">
+	<h3>MODELE POUR EXPORT HTML</h3>
+	<textarea class="form-specs-model">
+	<!doctype html>
+	<html>
+	<head>
+	<title>WEBSTART</title>
+	<meta charset="UTF-8" />
+	<style type="text/css">
+body {
+padding:0px;
+margin:0px;
+}
+.page {
+max-width:960px;
+margin:0 auto;
+padding-top:0em;
+padding-bottom:2em;
+clear:both;
+margin-bottom:2em;
+}
+.topic {
+border:1px #aaaaaa solid;
+padding-bottom:.5em;
+margin-bottom:.5em;
+}
+
+.topic h4 {
+padding-left:.5em;
+}
+
+.topic-content {
+padding-left:1em;
+padding-right:1em;
+}
+
+@media print {
+	body {
+	font-size:20px;
+	}
+	h3 {
+	font-size:3em;
+	page-break-after:always;
+	}
+	h4 {
+	font-size:2em;
+	}
+
+	.page-editor {
+	display:none;
+	}
+	.specs-toc {
+	display:none;
+	}
+	.specs-editor {
+	display:none;
+	}
+	.specs-toolbar {
+	display:none;
+	}
+	.footer {
+	display:none;
+	}
+	
+	.specs-resume {
+//	page-break-before:always;
+//	page-break-after:always;
+	}
+	.specs-resume .topic {
+	page-break-after:always;
+	margin-top:1em;
+	margin-bottom:1em;
+	}
+	.page2col .col {
+	width:100%;
+	float:none;
+	}
+}
+	</style>
+	</head>
+	<body>
+	<div class="page">
+	<div class="specs-resume">
+CONTENT
+	</div>
+	</div>
+	</body>
+	</html>
+	</textarea>
+	</div>
 	<div class="page footer">
+	</div>
+	<div class="page version">
+	v1.2.0
 	</div>
 	</body>
 </html>
