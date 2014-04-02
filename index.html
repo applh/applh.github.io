@@ -113,6 +113,53 @@ font-family: monospace, sans-serif;
 font-size:1em;
 }
 
+.section .status {
+padding:1px 1px 1px 1em;
+}
+.section .l0 {
+background-color:#ffaa00;
+}
+.section .l1 {
+background-color:#ffbb11;
+}
+.section .l2 {
+background-color:#ffcc22;
+}
+.section .l3 {
+background-color:#ffdd33;
+}
+.section .l4 {
+background-color:#ffee44;
+}
+.section .l5 {
+background-color:#55AA55;
+}
+.section .l6 {
+background-color:#55BB55;
+}
+.section .l7 {
+background-color:#55CC55;
+}
+.section .l8 {
+background-color:#55DD55;
+}
+.section .l9 {
+background-color:#55EE55;
+}
+.section .l10 {
+background-color:#55FF55;
+}
+
+.specs-toc {
+margin-right:1em;
+}
+.specs-toc h3 {
+margin-bottom:.5em;
+}
+.specs-editor h3 {
+margin-bottom:.5em;
+}
+
 @media print {
 	body {
 	font-size:20px;
@@ -443,6 +490,14 @@ WParty.specs_topic=function() {
 				+'</div>'+"\n";
 				
 			WParty.specs_stats_current++;
+			
+			var level=Math.round(content.length/100);
+			if (level > 10) level=10;
+			
+			jQuery(this).parent()
+				.removeClass("l0 l1 l2 l3 l4 l5 l6 l7 l8 l9 l10")
+				.addClass("l"+level);
+			
 		}
 		WParty.specs_stats_total++;
 	}
@@ -450,7 +505,7 @@ WParty.specs_topic=function() {
 WParty.specs_section=function() {
 	WParty.specs_html_section='';
 	var title=jQuery(this).find("h3").html();
-	jQuery(this).find("div").each(WParty.specs_topic);
+	jQuery(this).find("div.act-topic").each(WParty.specs_topic);
 	if (WParty.specs_html_section != "")
 		WParty.specs_html_section='<h3>'+title+'</h3>'+"\n"+WParty.specs_html_section;
 		
@@ -517,12 +572,17 @@ WParty.act_specs_publish=function() {
 
 
 WParty.jinit2=function() {
-	WParty.specs_load("specs-objectives", "Objectifs");
-	jQuery(".section div").click(WParty.act_specs_load);
-	WParty.specs_resume();
 	
 	jQuery(".act_specs_publish").click(WParty.act_specs_publish);
 	jQuery(".act_specs_save_file").click(WParty.act_specs_save_file);
+	
+	jQuery(".section div").addClass("act-topic");
+	jQuery(".section div.act-topic").wrap('<div class="status"></div>');
+
+	WParty.specs_load("specs-objectives", "Objectifs");
+	WParty.specs_resume();
+
+	jQuery(".section div.act-topic").click(WParty.act_specs_load);
 };
 
 jQuery(WParty.jinit2);
