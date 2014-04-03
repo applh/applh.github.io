@@ -195,6 +195,10 @@ font-weight:900;
 font-family:verdana,sans-serif;
 }
 
+.hide-but-print {
+display:none;
+}
+
 @media print {
 	body {
 	font-size:20px;
@@ -219,8 +223,8 @@ font-family:verdana,sans-serif;
 	.specs-toolbar {
 	display:none;
 	}
-	.footer {
-	display:none;
+	.specs-stats {
+	clear:both;
 	}
 	
 	.specs-resume {
@@ -235,6 +239,12 @@ font-family:verdana,sans-serif;
 	.page2col .col {
 	width:100%;
 	float:none;
+	}
+	.noprint {
+	display:none;
+	}
+	.hide-but-print {
+	display:block;
 	}
 }
 
@@ -627,11 +637,10 @@ WParty.jinit2=function() {
 	
 	jQuery(".box-wordpress").slideUp("slow");
 	jQuery(".box-options").slideUp("slow");
-	jQuery(".box-docs").slideUp("slow");
 	
 	jQuery(".toggle-wordpress a").click(function() { jQuery(".box-wordpress").slideToggle("slow")});
 	jQuery(".toggle-options a").click(function() { jQuery(".box-options").slideToggle("slow")});
-	jQuery(".toggle-docs a").click(function() { jQuery(".box-docs").slideToggle("slow")});
+	jQuery(".toggle-docs a").click(function() { jQuery(".box-docs").toggleClass("hide-but-print")});
 	
 	jQuery(".act-font-normal").click(function(){ jQuery("body").animate({"font-size": "14px"});});
 	jQuery(".act-font-larger").click(function(){ jQuery("body").animate({"font-size": "+=1"});});
@@ -745,7 +754,8 @@ jQuery(WParty.jinit2);
 	</div>
 </div>
 	</div>
-	
+
+<div class="noprint">
 <div class="page page-title"><h2 class="toggle-wordpress"><a href="#wordpress">WORDPRESS</a></h2></div>
 	<div class="page page2col page-editor box-wordpress">
 <div><h3>PAGES</h3></div>
@@ -826,6 +836,9 @@ padding-left:.5em;
 padding-left:1em;
 padding-right:1em;
 }
+.hide-but-print {
+display:none;
+}
 
 @media print {
 	body {
@@ -838,21 +851,11 @@ padding-right:1em;
 	h4 {
 	font-size:2em;
 	}
-
-	.page-editor {
+	.noprint {
 	display:none;
 	}
-	.specs-toc {
-	display:none;
-	}
-	.specs-editor {
-	display:none;
-	}
-	.specs-toolbar {
-	display:none;
-	}
-	.footer {
-	display:none;
+	.hide-but-print {
+	display:block;
 	}
 	
 	.specs-resume {
@@ -886,7 +889,8 @@ CONTENT
 	<div class="page footer">
 	</div>
 	<div class="page version">
-	v1.2.3
+	v1.2.4
 	</div>
+</div>
 	</body>
 </html>
