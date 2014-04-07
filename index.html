@@ -112,12 +112,17 @@ margin-left:5em;
 margin:.5em;
 }
 
+.specs-resume {
+max-width:960px;
+margin:0 auto;
+}
+
 /* FONTS */
 
 body {
 font-size:14px;
 }
-h2, h3, h4 {
+h2, h3, h4, strong {
 font-family: verdana,Sans-Serif;
 }
 div {
@@ -199,6 +204,18 @@ font-family:verdana,sans-serif;
 display:none;
 }
 
+.box-page {
+border:1px solid #dddddd;
+border-radius:1em;
+margin:.5em .5em .5em .5em;
+padding:0 1em 1em 1em;
+background-color:#eeeeee;
+}
+
+.specs-resume .topic {
+background-color:#ffffff;
+}
+
 @media print {
 	body {
 	font-size:20px;
@@ -246,6 +263,13 @@ display:none;
 	.hide-but-print {
 	display:block;
 	}
+	.box-page {
+	border:none;
+	margin:0;
+	padding:0;
+	background-color:transparent;
+}
+
 }
 
 	</style>
@@ -622,6 +646,27 @@ WParty.act_specs_publish=function() {
 	WParty.act_go();
 };
 
+WParty.act_specs_next=function() {
+	var next=jQuery(".specs-toc .selected").parent().next("div");
+	if (next.length < 1) { 
+		next=jQuery(".specs-toc .selected").closest(".section").next();
+	}
+	if (next.length < 1) { 
+		next=jQuery(".specs-toc .selected").closest(".box-section").next();
+	}
+	next.find(".act-topic:first").trigger("click");
+};
+
+WParty.act_specs_prev=function() {
+	var next=jQuery(".specs-toc .selected").parent().prev("div");
+	if (next.length < 1) { 
+		next=jQuery(".specs-toc .selected").closest(".section").prev();
+	}
+	if (next.length < 1) {
+		next=jQuery(".specs-toc .selected").closest(".box-section").prev();
+	}
+	next.find(".act-topic:last").trigger("click");
+};
 
 WParty.jinit2=function() {
 	
@@ -645,6 +690,10 @@ WParty.jinit2=function() {
 	jQuery(".act-font-normal").click(function(){ jQuery("body").animate({"font-size": "14px"});});
 	jQuery(".act-font-larger").click(function(){ jQuery("body").animate({"font-size": "+=1"});});
 	jQuery(".act-font-smaller").click(function(){ jQuery("body").animate({"font-size": "-=1"});});
+
+	jQuery(".act-specs-next").click(WParty.act_specs_next);
+	jQuery(".act-specs-prev").click(WParty.act_specs_prev);
+
 };
 
 jQuery(WParty.jinit2);
@@ -652,110 +701,111 @@ jQuery(WParty.jinit2);
 </script> 
 	</head>
 	<body>
+<div class="box-page">
 	<div class="page page2col page-specs">
-	<!--COL1-->
-	<div class="col col60">
-<div><h2>WEB*START</h2></div>
-<div class="specs-editor">
-<div><h3 class="specs-edit-title">//</h3></div>
-<div><textarea class="form-specs-content" name="form-specs-content">
-</textarea></div>
-</div>
-<div class="specs-stats">
-</div>
-<div class="specs-toolbar">
-<div><a href="#specs-save-file" class="act_specs_save_file">EXPORTER DANS UN FICHIER</a></div>
-<div><a href="#specs-publish" class="act_specs_publish">PUBLIER LES SPECIFICATIONS</a></div>
-</div>
+		<!--COL1-->
+		<div class="col col60">
+	<div><h2>WEB*START</h2></div>
+	<div class="specs-editor">
+	<div><strong class="nextprev"><a class="act-specs-prev" href="#prev">&lt;</a>/<a class="act-specs-next" href="#next">&gt;</a></strong> <strong class="specs-edit-title">//</strong></div>
+	<div><textarea class="form-specs-content" name="form-specs-content">
+	</textarea></div>
 	</div>
-	<!--COL2-->
-	<div class="col col20">
-<div class="specs-toc">
-<div class="section">
-	<h3 data-specs="project">Projet</h3>
-	<div data-specs="objectives">Objectifs</div>
-	<div data-specs="actors">Acteurs</div>
-	<div data-specs="media">Media</div>
-	<div data-specs="steps">Etapes</div>
-	<div data-specs="tasks">Tâches</div>
-	<div data-specs="costs">Coûts</div>
-	<div data-specs="risks">Risques</div>
-	<div data-specs="reports">Compte-Rendus</div>
-	<div data-specs="documents">Documents</div>
-</div>
-<div class="section">
-	<h3>Public</h3>
-	<div data-specs="values">Valeurs</div>
-	<div data-specs="inspiration">Inspiration</div>
-	<div data-specs="concurrents">Concurrents</div>
-	<div data-specs="social">Social</div>
-	<div data-specs="news">News</div>
-</div>
-<div class="section">
-	<h3>Scénarios</h3>
-	<div data-specs="novice">Novice</div>
-	<div data-specs="smart">Smart</div>
-	<div data-specs="expert">Expert</div>
-</div>
-<div class="section">
-	<h3>Timeline</h3>
-	<div data-specs="years">Années</div>
-	<div data-specs="months">Mois</div>
-	<div data-specs="weeks">Semaines</div>
-	<div data-specs="days">Jours</div>
-	<div data-specs="hours">Heures</div>
-</div>
-</div>
+	<div class="specs-stats">
 	</div>
-	<!--COL3-->
-	<div class="col col20">
-<div class="specs-toc">
-<div class="section">
-	<h3>Pages</h3>
-	<div data-specs="accueil">Accueil</div>
-	<div data-specs="forms">Formulaires</div>
-	<div data-specs="navigation">Navigation</div>
-	<div data-specs="layout">Mise en Page</div>
-	<div data-specs="colors">Couleurs</div>
-	<div data-specs="fonts">Polices</div>
-	<div data-specs="seo">Référencement</div>
-</div>
-<div class="section">
-	<h3>Composants</h3>
-	<div data-specs="animation">Animation</div>
-	<div data-specs="standards">Standards</div>
-	<div data-specs="technos">Technos</div>
-</div>
-<div class="section">
-	<h3>Développement</h3>
-	<div data-specs="design">Design</div>
-	<div data-specs="creation">Création</div>
-	<div data-specs="integration">Intégration</div>
-	<div data-specs="validation">Validation</div>
-	<div data-specs="publication">Publication</div>
-	<div data-specs="monitoring">Monitoring</div>
-</div>
-<div class="section">
-	<h3>Priorités</h3>
-	<div data-specs="urgent">Urgent</div>
-	<div data-specs="medium">Medium</div>
-	<div data-specs="waiting">En Attente</div>
-</div>
-<div class="section">
-	<h3>Business Plan</h3>
-	<div data-specs="optimist">Scénario Optimiste</div>
-	<div data-specs="realistics">Scénario Réaliste</div>
-	<div data-specs="pessimist">Scénario Pessimiste</div>
-</div>
-</div>
+	<div class="specs-toolbar">
+	<div><a href="#specs-save-file" class="act_specs_save_file">EXPORTER DANS UN FICHIER</a></div>
+	<div><a href="#specs-publish" class="act_specs_publish">PUBLIER LES SPECIFICATIONS</a></div>
 	</div>
-<div class="page page-title"><h2 class="toggle-docs"><a href="#docs">CAHIER DES CHARGES</a></h2></div>
-<div class="col col100 box-docs">
-	<div class="specs-resume">
+		</div>
+		<!--COL2-->
+		<div class="col col20 box-section">
+	<div class="specs-toc">
+	<div class="section">
+		<h3 data-specs="project">Projet</h3>
+		<div data-specs="objectives">Objectifs</div>
+		<div data-specs="actors">Acteurs</div>
+		<div data-specs="media">Media</div>
+		<div data-specs="steps">Etapes</div>
+		<div data-specs="tasks">Tâches</div>
+		<div data-specs="costs">Coûts</div>
+		<div data-specs="risks">Risques</div>
+		<div data-specs="reports">Compte-Rendus</div>
+		<div data-specs="documents">Documents</div>
+	</div>
+	<div class="section">
+		<h3>Public</h3>
+		<div data-specs="values">Valeurs</div>
+		<div data-specs="inspiration">Inspiration</div>
+		<div data-specs="concurrents">Concurrents</div>
+		<div data-specs="social">Social</div>
+		<div data-specs="news">News</div>
+	</div>
+	<div class="section">
+		<h3>Scénarios</h3>
+		<div data-specs="novice">Novice</div>
+		<div data-specs="smart">Smart</div>
+		<div data-specs="expert">Expert</div>
+	</div>
+	<div class="section">
+		<h3>Timeline</h3>
+		<div data-specs="years">Années</div>
+		<div data-specs="months">Mois</div>
+		<div data-specs="weeks">Semaines</div>
+		<div data-specs="days">Jours</div>
+		<div data-specs="hours">Heures</div>
+	</div>
+	</div>
+		</div>
+		<!--COL3-->
+		<div class="col col20 box-section">
+	<div class="specs-toc">
+	<div class="section">
+		<h3>Pages</h3>
+		<div data-specs="accueil">Accueil</div>
+		<div data-specs="forms">Formulaires</div>
+		<div data-specs="navigation">Navigation</div>
+		<div data-specs="layout">Mise en Page</div>
+		<div data-specs="colors">Couleurs</div>
+		<div data-specs="fonts">Polices</div>
+		<div data-specs="seo">Référencement</div>
+	</div>
+	<div class="section">
+		<h3>Composants</h3>
+		<div data-specs="animation">Animation</div>
+		<div data-specs="standards">Standards</div>
+		<div data-specs="technos">Technos</div>
+	</div>
+	<div class="section">
+		<h3>Développement</h3>
+		<div data-specs="design">Design</div>
+		<div data-specs="creation">Création</div>
+		<div data-specs="integration">Intégration</div>
+		<div data-specs="validation">Validation</div>
+		<div data-specs="publication">Publication</div>
+		<div data-specs="monitoring">Monitoring</div>
+	</div>
+	<div class="section">
+		<h3>Priorités</h3>
+		<div data-specs="urgent">Urgent</div>
+		<div data-specs="medium">Medium</div>
+		<div data-specs="waiting">En Attente</div>
+	</div>
+	<div class="section">
+		<h3>Business Plan</h3>
+		<div data-specs="optimist">Scénario Optimiste</div>
+		<div data-specs="realistics">Scénario Réaliste</div>
+		<div data-specs="pessimist">Scénario Pessimiste</div>
+	</div>
+	</div>
+		</div>
+	</div>
+	<div class="page page-title"><h2 class="toggle-docs"><a href="#docs">CAHIER DES CHARGES</a></h2></div>
+	<div class="col col100 box-docs">
+		<div class="specs-resume">
+		</div>
 	</div>
 </div>
-	</div>
-
 <div class="noprint">
 <div class="page page-title"><h2 class="toggle-wordpress"><a href="#wordpress">WORDPRESS</a></h2></div>
 	<div class="page page2col page-editor box-wordpress">
