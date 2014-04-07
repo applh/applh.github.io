@@ -606,13 +606,13 @@ WParty.specs_stats=function() {
     	curlevel2=Math.round(100*WParty.specs_stats_current_size/WParty.specs_stats_total_size);
     	
 	WParty.specs_stats_html=
-		'<div><strong>Spécifications en cours: '
+		'<div><span>Spécifications en cours: '
 		+ WParty.specs_stats_current + '/' + WParty.specs_stats_total
-		+' ('+curlevel+'%)</strong></div>';
+		+'</span> <strong>('+curlevel+'%)</strong></div>';
 	WParty.specs_stats_html+=
-		'<div><strong>Contenu actuel: '
+		'<div><span>Contenu actuel: '
 		+ WParty.specs_stats_current_size + '/' + WParty.specs_stats_total_size
-		+' ('+curlevel2+'%)</strong></div>';
+		+'</span> <strong> ('+curlevel2+'%)</strong></div>';
 
 	jQuery(".specs-stats").html(WParty.specs_stats_html);
 };
