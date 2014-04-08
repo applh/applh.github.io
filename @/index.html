@@ -499,7 +499,10 @@ WParty.act_specs_save_drive=function() {
 	var content=model.replace(/CONTENT/, resume);
 
 	var adhtml=jQuery(".form-specs-drive").val();
+	var savhtml=adhtml.replace(/CONTENT/, base64_encode(content));
+	
 	jQuery(".ajax-drive").html(adhtml);
+/*
 	if (typeof gapi != 'undefined') {
     	gapi.savetodrive.render('g-savetodrive', {
           src: 'echo.php?enc=base64&data='+base64_encode(content),
@@ -507,6 +510,7 @@ WParty.act_specs_save_drive=function() {
           sitename: 'Frimi.fr'
     	});
     }
+    */
 };
 
 WParty.act_specs_save_file=function() {
@@ -970,8 +974,9 @@ CONTENT
 
 	<div><h3>MODELE POUR EXPORT DRIVE</h3></div>
 	<textarea class="form-specs-drive">
-<div id="g-savetodrive"
-   data-src="index.html"
+<script src="https://apis.google.com/js/platform.js"></script>
+<div class="g-savetodrive"
+   data-src="echo.php?enc=base64&data=CONTENT"
    data-filename="cahier-des-charges.html"
    data-sitename="Frimi.fr">
 </div>
@@ -985,14 +990,6 @@ CONTENT
 	v1.3.4
 	</div>
 </div>
-<script type="text/javascript">
-  (function(w) {
-    if (!(w.gapi && w.gapi._pl)) {
-    var d = w.document;
-    var po = d.createElement('script'); po.type = 'text/javascript'; po.async = true;
-    po.src = 'https://apis.google.com/js/platform.js';
-    var s = d.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-  }})(window);
 </script>
 	</body>
 </html>
