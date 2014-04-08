@@ -499,15 +499,16 @@ WParty.act_specs_save_drive=function() {
 	var content=model.replace(/CONTENT/, resume);
 
 	var adhtml=jQuery(".form-specs-drive").val();
-	var savhtml=adhtml.replace(/CONTENT/, base64_encode(content)
-											.replace(/\+/g, '-') // Convert '+' to '-'
-    										.replace(/\//g, '_') // Convert '/' to '_'
-    										.replace(/=+$/, '')// Remove ending '='
-	);
-	jQuery(".ajax-drive").html(savhtml);
+	var base64get=base64_encode(content)
+							.replace(/\+/g, '-') // Convert '+' to '-'
+    						.replace(/\//g, '_') // Convert '/' to '_'
+    						.replace(/=+$/, ''); // Remove ending '='
+
+	jQuery(".ajax-drive").html(adhtml);
+
 	if (typeof gapi != 'undefined') {
     	gapi.savetodrive.render('g-savetodrive', {
-          src: 'echo.php?enc=base64&data='+savhtml,
+          src: 'echo.php?enc=base64&data='+base64get,
           filename: 'cahier-des-charges.html',
           sitename: 'Frimi.fr'
     	});
@@ -984,7 +985,7 @@ CONTENT
 	<div class="page footer">
 	</div>
 	<div class="page version">
-	v1.3.7
+	v1.3.8
 	</div>
 </div>
 <script src="https://apis.google.com/js/platform.js">
