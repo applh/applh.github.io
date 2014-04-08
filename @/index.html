@@ -500,16 +500,12 @@ WParty.act_specs_save_drive=function() {
 	var content=model.replace(/CONTENT/, resume);
 
 	var adhtml=jQuery(".form-specs-drive").val();
-	var admd5=md5(base64get);
 	
-	var base64get=base64_encode(content)
-							.replace(/\+/g, '-') // Convert '+' to '-'
-    						.replace(/\//g, '_') // Convert '/' to '_'
-    						.replace(/=+$/, ''); // Remove ending '='
-
+	var base64post=base64_encode(content);
+	var admd5=md5(base64post);
 
 	if (typeof gapi != 'undefined') {
-		jQuery(".ajax-drive").load("echo.php", {mode: "write", md5: admd5, data : base64get}, 
+		jQuery(".ajax-drive").load("echo.php", {mode: "write", enc: "base64", md5: admd5, data : base64post}, 
 			function() {
 			
 		jQuery(".ajax-drive").html(adhtml);
@@ -994,7 +990,7 @@ CONTENT
 	<div class="page footer">
 	</div>
 	<div class="page version">
-	v1.3.9
+	v1.4.0
 	</div>
 </div>
 <script src="https://apis.google.com/js/platform.js">
