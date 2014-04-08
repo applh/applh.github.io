@@ -499,18 +499,20 @@ WParty.act_specs_save_drive=function() {
 	var content=model.replace(/CONTENT/, resume);
 
 	var adhtml=jQuery(".form-specs-drive").val();
-	var savhtml=adhtml.replace(/CONTENT/, base64_encode(content));
-	
-	jQuery(".ajax-drive").html(adhtml);
-/*
+	var savhtml=adhtml.replace(/CONTENT/, base64_encode(content)
+											.replace(/\+/g, '-') // Convert '+' to '-'
+    										.replace(/\//g, '_') // Convert '/' to '_'
+    										.replace(/=+$/, '')// Remove ending '='
+	);
+	jQuery(".ajax-drive").html(savhtml);
+	alert(savhtml);
 	if (typeof gapi != 'undefined') {
     	gapi.savetodrive.render('g-savetodrive', {
-          src: 'echo.php?enc=base64&data='+base64_encode(content),
+          src: 'echo.php?enc=base64&data='+savhtml,
           filename: 'cahier-des-charges.html',
           sitename: 'Frimi.fr'
     	});
     }
-    */
 };
 
 WParty.act_specs_save_file=function() {
@@ -974,11 +976,7 @@ CONTENT
 
 	<div><h3>MODELE POUR EXPORT DRIVE</h3></div>
 	<textarea class="form-specs-drive">
-<script src="https://apis.google.com/js/platform.js"></script>
-<div class="g-savetodrive"
-   data-src="echo.php?enc=base64&data=CONTENT"
-   data-filename="cahier-des-charges.html"
-   data-sitename="Frimi.fr">
+<div id="g-savetodrive">
 </div>
 	</textarea>
 
@@ -987,9 +985,11 @@ CONTENT
 	<div class="page footer">
 	</div>
 	<div class="page version">
-	v1.3.5
+	v1.3.6
 	</div>
 </div>
+<script src="https://apis.google.com/js/platform.js">
+      {parsetags: 'explicit'}
 </script>
 	</body>
 </html>
