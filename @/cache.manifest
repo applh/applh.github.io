@@ -1,9 +1,12 @@
 CACHE MANIFEST
 
-# version V1.3.0
-
+# version V1.3.1
+CACHE:
 index.html
 base64_encode.js
 base64_decode.js
 jquery-2.1.0.min.js
 FileSaver.js
+
+NETWORK:
+*
