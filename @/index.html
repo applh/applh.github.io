@@ -126,8 +126,10 @@ h2, h3, h4, strong {
 font-family: verdana,Sans-Serif;
 }
 div {
+/*
 font-size:1em;
 font-family: "Times New Roman",Georgia,Serif;
+*/
 }
 
 input, textarea {
@@ -195,8 +197,13 @@ font-size:1.2em;
 }
 
 
+.section div.status {
+font-size:.8em;
+font-family:verdana;
+}
+
 .section .status .selected {
-font-weight:900;
+font-weight:800;
 font-family:verdana,sans-serif;
 }
 
@@ -481,6 +488,11 @@ WParty.specs_last_request="";
 WParty.specs_content="";
 WParty.specs_edit="";
 
+WParty.act_specs_save_drive=function() {
+	var adhtml=jQuery(".form-specs-drive").val();
+	jQuery(".ajax-drive").html(adhtml);
+};
+
 WParty.act_specs_save_file=function() {
 	// GET THE LATEST VERSION
 	WParty.specs_save_form();
@@ -492,7 +504,7 @@ WParty.act_specs_save_file=function() {
 	var content=model.replace(/CONTENT/, resume);
 	var blob = new Blob([content], {type: "text/plain;charset=utf-8"});
 	saveAs(blob, title+".html");
-}
+};
 
 
 WParty.specs_save_form=function() {
@@ -672,6 +684,7 @@ WParty.jinit2=function() {
 	
 	jQuery(".act_specs_publish").click(WParty.act_specs_publish);
 	jQuery(".act_specs_save_file").click(WParty.act_specs_save_file);
+	jQuery(".act_specs_save_drive").click(WParty.act_specs_save_drive);
 	
 	jQuery(".section div").addClass("act-topic");
 	jQuery(".section div.act-topic").wrap('<div class="status"></div>');
@@ -715,6 +728,8 @@ jQuery(WParty.jinit2);
 	</div>
 	<div class="specs-toolbar">
 	<div><a href="#specs-save-file" class="act_specs_save_file">EXPORTER DANS UN FICHIER</a></div>
+	<div><a href="#specs-save-drive" class="act_specs_save_drive">EXPORTER DANS MON GOOGLE DRIVE</a></div>
+	<div class="ajax-drive"></div>
 	<div><a href="#specs-publish" class="act_specs_publish">PUBLIER LES SPECIFICATIONS</a></div>
 	</div>
 		</div>
@@ -936,7 +951,19 @@ CONTENT
 	</body>
 	</html>
 	</textarea>
+
+	<div><h3>MODELE POUR EXPORT DRIVE</h3></div>
+	<textarea class="form-specs-drive">
+<script src="https://apis.google.com/js/platform.js"></script>
+<div class="g-savetodrive"
+   data-src="index.html"
+   data-filename="cahier-des-charges.html"
+   data-sitename="Frimi.fr">
+</div>
+	</textarea>
+
 	</div>
+
 	<div class="page footer">
 	</div>
 	<div class="page version">
