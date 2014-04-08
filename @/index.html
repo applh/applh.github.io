@@ -489,13 +489,24 @@ WParty.specs_content="";
 WParty.specs_edit="";
 
 WParty.act_specs_save_drive=function() {
+	// GET THE LATEST VERSION
+	WParty.specs_save_form();
+	WParty.specs_resume();
+
+	var title="cahier-des-charges";
+	var model=jQuery(".form-specs-model").val();
+	var resume=jQuery(".specs-resume").html();
+	var content=model.replace(/CONTENT/, resume);
+
 	var adhtml=jQuery(".form-specs-drive").val();
 	jQuery(".ajax-drive").html(adhtml);
-    gapi.savetodrive.render('g-savetodrive', {
-          src: 'index.html',
+	if (typeof gapi != 'undefined') {
+    	gapi.savetodrive.render('g-savetodrive', {
+          src: 'http://frimi.fr/@/index.php&data='+base64_encode(content),
           filename: 'cahier-des-charges.html',
           sitename: 'Frimi.fr'
-    });
+    	});
+    }
 };
 
 WParty.act_specs_save_file=function() {
@@ -971,7 +982,7 @@ CONTENT
 	<div class="page footer">
 	</div>
 	<div class="page version">
-	v1.3.0
+	v1.3.2
 	</div>
 </div>
 <script type="text/javascript">
