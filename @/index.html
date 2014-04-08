@@ -283,6 +283,7 @@ background-color:#ffffff;
 <script type="text/javascript" src="jquery-2.1.0.min.js"></script> 
 <script type="text/javascript" src="base64_encode.js"></script> 
 <script type="text/javascript" src="base64_decode.js"></script> 
+<script type="text/javascript" src="md5.js"></script> 
 <script type="text/javascript" src="FileSaver.js"></script> 
 <script type="text/javascript">
 var WParty={};
@@ -499,19 +500,27 @@ WParty.act_specs_save_drive=function() {
 	var content=model.replace(/CONTENT/, resume);
 
 	var adhtml=jQuery(".form-specs-drive").val();
+	var admd5=md5(base64get);
+	
 	var base64get=base64_encode(content)
 							.replace(/\+/g, '-') // Convert '+' to '-'
     						.replace(/\//g, '_') // Convert '/' to '_'
     						.replace(/=+$/, ''); // Remove ending '='
 
-	jQuery(".ajax-drive").html(adhtml);
 
 	if (typeof gapi != 'undefined') {
+		jQuery(".ajax-drive").load("echo.php", {mode: "write", md5: admd5, data : base64get}, 
+			function() {
+			
+		jQuery(".ajax-drive").html(adhtml);
     	gapi.savetodrive.render('g-savetodrive', {
-          src: 'echo.php?enc=base64&data='+base64get,
+          src: 'echo.php?mode=read&md5='+admd5,
           filename: 'cahier-des-charges.html',
           sitename: 'Frimi.fr'
     	});
+			
+			});
+		
     }
 };
 
@@ -985,7 +994,7 @@ CONTENT
 	<div class="page footer">
 	</div>
 	<div class="page version">
-	v1.3.8
+	v1.3.9
 	</div>
 </div>
 <script src="https://apis.google.com/js/platform.js">
