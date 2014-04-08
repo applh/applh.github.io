@@ -505,7 +505,6 @@ WParty.act_specs_save_drive=function() {
     										.replace(/=+$/, '')// Remove ending '='
 	);
 	jQuery(".ajax-drive").html(savhtml);
-	alert(savhtml);
 	if (typeof gapi != 'undefined') {
     	gapi.savetodrive.render('g-savetodrive', {
           src: 'echo.php?enc=base64&data='+savhtml,
@@ -985,7 +984,7 @@ CONTENT
 	<div class="page footer">
 	</div>
 	<div class="page version">
-	v1.3.6
+	v1.3.7
 	</div>
 </div>
 <script src="https://apis.google.com/js/platform.js">
