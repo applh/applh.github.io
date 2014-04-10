@@ -582,6 +582,7 @@ WParty.act_specs_load=function() {
 	
 	jQuery(".act-topic").removeClass("selected");
 	jQuery(this).addClass("selected");
+	jQuery(".form-specs-content").trigger("focus");
 };
 
 WParty.specs_html='';
@@ -1008,7 +1009,7 @@ CONTENT
 	<div class="page footer">
 	</div>
 	<div class="page version">
-	v1.4.1
+	v1.4.2
 	</div>
 </div>
 <script type="text/javascript">
