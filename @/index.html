@@ -26,7 +26,7 @@ border-bottom: 1px solid #aaaaaa;
 }
 textarea {
 min-width:480px;
-min-height:480px;
+min-height:400px;
 padding:1em;
 }
 input[type="text"] {
@@ -106,7 +106,8 @@ float:left;
 }
 .specs-toolbar {
 float:left;
-margin-left:5em;
+margin-left:4em;
+font-size:.9em;
 }
 .specs-toolbar div{
 margin:.5em;
@@ -221,6 +222,10 @@ background-color:#eeeeee;
 
 .specs-resume .topic {
 background-color:#ffffff;
+}
+
+.nextprev {
+font-size:1.5em;
 }
 
 @media print {
@@ -723,16 +728,19 @@ WParty.jinit2=function() {
 	jQuery(".box-wordpress").slideUp("slow");
 	jQuery(".box-options").slideUp("slow");
 	
-	jQuery(".toggle-wordpress a").click(function() { jQuery(".box-wordpress").slideToggle("slow")});
-	jQuery(".toggle-options a").click(function() { jQuery(".box-options").slideToggle("slow")});
-	jQuery(".toggle-docs a").click(function() { jQuery(".box-docs").toggleClass("hide-but-print")});
+	jQuery(".toggle-wordpress a").click(function() { jQuery(".box-wordpress").slideToggle("slow"); });
+	jQuery(".toggle-options a").click(function() { jQuery(".box-options").slideToggle("slow"); });
+	jQuery(".toggle-docs a").click(function() { jQuery(".box-docs").toggleClass("hide-but-print"); });
 	
-	jQuery(".act-font-normal").click(function(){ jQuery("body").animate({"font-size": "14px"});});
-	jQuery(".act-font-larger").click(function(){ jQuery("body").animate({"font-size": "+=1"});});
-	jQuery(".act-font-smaller").click(function(){ jQuery("body").animate({"font-size": "-=1"});});
+	jQuery(".act-font-normal").click(function(){ jQuery("body").animate({"font-size": "14px"}); });
+	jQuery(".act-font-larger").click(function(){ jQuery("body").animate({"font-size": "+=1"}); });
+	jQuery(".act-font-smaller").click(function(){ jQuery("body").animate({"font-size": "-=1"}); });
 
 	jQuery(".act-specs-next").click(WParty.act_specs_next);
 	jQuery(".act-specs-prev").click(WParty.act_specs_prev);
+
+	jQuery(".form-specs-content").on("mouseout", function() { WParty.specs_save_form();	WParty.specs_resume(); });
+	jQuery(".form-specs-content").on("focusout", function() { WParty.specs_save_form();	WParty.specs_resume(); });
 
 };
 
@@ -745,7 +753,7 @@ jQuery(WParty.jinit2);
 	<div class="page page2col page-specs">
 		<!--COL1-->
 		<div class="col col60">
-	<div><h2>WEB*START</h2></div>
+	<div><h2><a href="/">WEB*START</a></h2></div>
 	<div class="specs-editor">
 	<div><strong class="nextprev"><a class="act-specs-prev" href="#prev">&lt;</a>/<a class="act-specs-next" href="#next">&gt;</a></strong> <strong class="specs-edit-title">//</strong></div>
 	<div><textarea class="form-specs-content" name="form-specs-content">
@@ -767,7 +775,7 @@ jQuery(WParty.jinit2);
 		<h3 data-specs="project">Projet</h3>
 		<div data-specs="objectives">Objectifs</div>
 		<div data-specs="actors">Acteurs</div>
-		<div data-specs="media">Media</div>
+		<div data-specs="media">Multimedia</div>
 		<div data-specs="steps">Etapes</div>
 		<div data-specs="tasks">Tâches</div>
 		<div data-specs="costs">Coûts</div>
@@ -806,6 +814,7 @@ jQuery(WParty.jinit2);
 		<h3>Pages</h3>
 		<div data-specs="accueil">Accueil</div>
 		<div data-specs="forms">Formulaires</div>
+		<div data-specs="sitemap">Sitemap</div>
 		<div data-specs="navigation">Navigation</div>
 		<div data-specs="layout">Mise en Page</div>
 		<div data-specs="colors">Couleurs</div>
@@ -983,6 +992,15 @@ CONTENT
 	<textarea class="form-specs-drive">
 <div id="g-savetodrive">
 </div>
+<script type="text/javascript">
+  (function(w) {
+    if (!(w.gapi && w.gapi._pl)) {
+    var d = w.document;
+    var po = d.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/platform.js';
+    var s = d.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  }})(window);
+</script>
 	</textarea>
 
 	</div>
@@ -990,11 +1008,17 @@ CONTENT
 	<div class="page footer">
 	</div>
 	<div class="page version">
-	v1.4.0
+	v1.4.1
 	</div>
 </div>
-<script src="https://apis.google.com/js/platform.js">
-      {parsetags: 'explicit'}
+<script type="text/javascript">
+  (function(w) {
+    if (!(w.gapi && w.gapi._pl)) {
+    var d = w.document;
+    var po = d.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/platform.js';
+    var s = d.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  }})(window);
 </script>
 	</body>
 </html>
