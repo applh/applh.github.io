@@ -769,8 +769,11 @@ WParty.jinit2=function() {
 	jQuery(".act_specs_save_drive, .act_specs_publish").on("click", function() { jQuery(".specs-toolbar").css("background-image", "url('online.png?"+md5(Math.random())+"')"); });
 
 	if(/iP(hone|od|ad)/.test(window.navigator.userAgent)) {
-		jQuery(".specs-toolbar").css("background-image", "none");
-		
+		jQuery(".specs-toolbar").css("background-image", "none");		
+	}
+	else {
+		jQuery(".specs-toolbar").css("background-image", "url('online.png?"+md5(Math.random())+"')");
+
 			// async load of google drive api
 		  (function(w) {
     		if (!(w.gapi && w.gapi._pl)) {
@@ -779,9 +782,6 @@ WParty.jinit2=function() {
     		po.src = 'https://apis.google.com/js/platform.js';
     		var s = d.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
   			}})(window);
-	}
-	else {
-		jQuery(".specs-toolbar").css("background-image", "url('online.png?"+md5(Math.random())+"')");
 	}
 };
 
