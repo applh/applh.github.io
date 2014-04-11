@@ -770,6 +770,15 @@ WParty.jinit2=function() {
 
 	if(/iP(hone|od|ad)/.test(window.navigator.userAgent)) {
 		jQuery(".specs-toolbar").css("background-image", "none");
+		
+			// async load of google drive api
+		  (function(w) {
+    		if (!(w.gapi && w.gapi._pl)) {
+    		var d = w.document;
+    		var po = d.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    		po.src = 'https://apis.google.com/js/platform.js';
+    		var s = d.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  			}})(window);
 	}
 	else {
 		jQuery(".specs-toolbar").css("background-image", "url('online.png?"+md5(Math.random())+"')");
@@ -1057,14 +1066,5 @@ CONTENT
 	v1.4.7
 	</div>
 </div>
-<script type="text/javascript">
-  (function(w) {
-    if (!(w.gapi && w.gapi._pl)) {
-    var d = w.document;
-    var po = d.createElement('script'); po.type = 'text/javascript'; po.async = true;
-    po.src = 'https://apis.google.com/js/platform.js';
-    var s = d.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-  }})(window);
-</script>
 	</body>
 </html>
