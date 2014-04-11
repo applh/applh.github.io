@@ -769,7 +769,8 @@ WParty.jinit2=function() {
 	jQuery(".act_specs_save_drive, .act_specs_publish").on("click", function() { jQuery(".specs-toolbar").css("background-image", "url('online.png?"+md5(Math.random())+"')"); });
 
 	if(/iP(hone|od|ad)/.test(window.navigator.userAgent)) {
-		jQuery(".specs-toolbar").css("background-image", "none");		
+		jQuery(".specs-toolbar").css("background-image", "none");
+		jQuery(".act_specs_save_drive, .act_specs_save_file").hide();				
 	}
 	else {
 		jQuery(".specs-toolbar").css("background-image", "url('online.png?"+md5(Math.random())+"')");
