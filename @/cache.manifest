@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# version V1.4.5
+# version V1.4.6
 #
 
 CACHE:
@@ -10,6 +10,7 @@ md5.js
 jquery-2.1.0.min.js
 FileSaver.js
 bg.png
+offline.png
 
 NETWORK:
 *
