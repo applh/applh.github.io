@@ -767,7 +767,13 @@ WParty.jinit2=function() {
 	jQuery(".form-specs-content").on("focusout", function() { WParty.specs_save_form();	WParty.specs_resume(); });
 	
 	jQuery(".act_specs_save_drive, .act_specs_publish").on("click", function() { jQuery(".specs-toolbar").css("background-image", "url('online.png?"+md5(Math.random())+"')"); });
-	jQuery(".specs-toolbar").css("background-image", "url('online.png?"+md5(Math.random())+"')");
+
+	if(/iP(hone|od|ad)/.test(window.navigator.userAgent)) {
+		jQuery(".specs-toolbar").css("background-image", "none");
+	}
+	else {
+		jQuery(".specs-toolbar").css("background-image", "url('online.png?"+md5(Math.random())+"')");
+	}
 };
 
 jQuery(WParty.jinit2);
@@ -1048,7 +1054,7 @@ CONTENT
 	<div class="page footer">
 	</div>
 	<div class="page version">
-	v1.4.6
+	v1.4.7
 	</div>
 </div>
 <script type="text/javascript">
