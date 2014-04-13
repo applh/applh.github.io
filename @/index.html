@@ -121,8 +121,8 @@ float:left;
 }
 .specs-toolbar {
 float:left;
-margin-left:3em;
-font-size:.9em;
+margin-left:5em;
+font-size:1.5em;
 }
 .specs-toolbar div{
 margin:.5em;
@@ -243,10 +243,20 @@ background-color:#ffffff;
 font-size:1.5em;
 }
 
-.specs-toolbar {
+.specs-toolbar-popup {
 background: url('offline.png');
 background-repeat: no-repeat;
-background-position: bottom right;
+background-position: 95% 95%;
+}
+
+.specs-toolbar-popup {
+display:none;
+position:fixed;
+top:1em;
+left:30%;
+background-color:#cccccc;
+border-radius:2em;
+padding:2em;
 }
 
 /* PRINT */
@@ -736,6 +746,11 @@ WParty.act_specs_prev=function() {
 		next.find(".act-topic:last").trigger("click");
 };
 
+WParty.act_specs_toggle_popup=function () {
+	jQuery(".specs-toolbar-popup").slideToggle();
+};
+
+
 WParty.jinit2=function() {
 	
 	jQuery(".act_specs_publish").click(WParty.act_specs_publish);
@@ -766,14 +781,15 @@ WParty.jinit2=function() {
 	jQuery(".form-specs-content").on("mouseout", function() { WParty.specs_save_form();	WParty.specs_resume(); });
 	jQuery(".form-specs-content").on("focusout", function() { WParty.specs_save_form();	WParty.specs_resume(); });
 	
-	jQuery(".act_specs_save_drive, .act_specs_publish").on("click", function() { jQuery(".specs-toolbar").css("background-image", "url('online.png?"+md5(Math.random())+"')"); });
+	jQuery(".act_specs_save_drive, .act_specs_publish").on("click", function() { jQuery(".specs-toolbar-popup").css("background-image", "url('online.png?"+md5(Math.random())+"')"); });
 
+	jQuery(".act_specs_export_popup").on("click", WParty.act_specs_toggle_popup);
 	if(/iP(hone|od|ad)/.test(window.navigator.userAgent)) {
 		jQuery(".specs-toolbar").css("background-image", "none");
 		jQuery(".act_specs_save_drive, .act_specs_save_file").hide();				
 	}
 	else {
-		jQuery(".specs-toolbar").css("background-image", "url('online.png?"+md5(Math.random())+"')");
+		jQuery(".specs-toolbar-popup").css("background-image", "url('online.png?"+md5(Math.random())+"')");
 
 			// async load of google drive api
 		  (function(w) {
@@ -806,10 +822,17 @@ jQuery(WParty.jinit2);
 	<div class="specs-stats">
 	</div>
 	<div class="specs-toolbar">
-	<div><a href="#specs-save-file" class="act_specs_save_file">EXPORTER DANS UN FICHIER</a></div>
-	<div><a href="#specs-save-drive" class="act_specs_save_drive">EXPORTER DANS MON GOOGLE DRIVE</a></div>
-	<div class="ajax-drive"></div>
-	<div><a href="#specs-publish" class="act_specs_publish">PUBLIER LES SPECIFICATIONS</a></div>
+		<div><a href="#specs-export" class="act_specs_export_popup">EXPORTER</a></div>
+	</div>
+	<div class="specs-toolbar-popup">
+		<div style="text-align:right;"><a href="#specs-export" class="act_specs_export_popup">[fermer]</a></div>
+		<hr>
+		<div><a href="#specs-save-file" class="act_specs_save_file">EXPORTER DANS UN FICHIER</a></div>
+		<hr>
+		<div><a href="#specs-save-drive" class="act_specs_save_drive">EXPORTER DANS MON GOOGLE DRIVE</a></div>
+		<div class="ajax-drive"></div>
+		<hr>
+		<div><a href="#specs-publish" class="act_specs_publish">EXPORTER VERS WORDPRESS<a></div>
 	</div>
 		</div>
 		<!--COL2-->
@@ -1064,7 +1087,7 @@ CONTENT
 	<div class="page footer">
 	</div>
 	<div class="page version">
-	v1.4.7
+	v1.4.8
 	</div>
 </div>
 	</body>
