@@ -259,6 +259,10 @@ border-radius:2em;
 padding:2em;
 }
 
+.popup-form {
+display:none;
+}
+
 /* PRINT */
 
 @media print {
@@ -558,6 +562,35 @@ WParty.act_specs_save_drive=function() {
     }
 };
 
+WParty.act_specs_email_submit=function() {
+	// GET THE LATEST VERSION
+	WParty.specs_save_form();
+	WParty.specs_resume();
+	
+		var title="cahier-des-charges";
+	var model=jQuery(".form-specs-model").val();
+	var resume=jQuery(".specs-resume").html();
+	var content=model.replace(/CONTENT/, resume);
+
+	var adhtml=jQuery(".form-specs-drive").val();
+	
+	var base64post=base64_encode(content);
+	var admd5=md5(base64post);
+
+	var form_email=jQuery.trim(jQuery(".popup-form-specs-email .form-email").val());
+	if (form_email != "") {
+		var form_email64=base64_encode();
+	
+			jQuery(".ajax-drive").load("echo.php", 
+										{mode: "email", to: form_email64, enc: "base64", md5: admd5, data : base64post}, 
+										function() {			
+    									});
+    }
+    else {
+    	alert('entrez un email');
+    }
+
+};
 WParty.act_specs_save_file=function() {
 	// GET THE LATEST VERSION
 	WParty.specs_save_form();
@@ -751,6 +784,7 @@ WParty.act_specs_toggle_popup=function () {
 };
 
 
+
 WParty.jinit2=function() {
 	
 	jQuery(".act_specs_publish").click(WParty.act_specs_publish);
@@ -784,6 +818,10 @@ WParty.jinit2=function() {
 	jQuery(".act_specs_save_drive, .act_specs_publish").on("click", function() { jQuery(".specs-toolbar-popup").css("background-image", "url('online.png?"+md5(Math.random())+"')"); });
 
 	jQuery(".act_specs_export_popup").on("click", WParty.act_specs_toggle_popup);
+	jQuery(".act_specs_email").on("click", function() { jQuery(".popup-form").hide(); jQuery(".popup-form-specs-email").show(); });
+	jQuery(".act_specs_email_submit").on("click", WParty.act_specs_email_submit);
+	
+	
 	if(/iP(hone|od|ad)/.test(window.navigator.userAgent)) {
 		jQuery(".specs-toolbar").css("background-image", "none");
 		jQuery(".act_specs_save_drive, .act_specs_save_file").hide();				
@@ -833,6 +871,42 @@ jQuery(WParty.jinit2);
 		<div class="ajax-drive"></div>
 		<hr>
 		<div><a href="#specs-publish" class="act_specs_publish">EXPORTER VERS WORDPRESS<a></div>
+		<hr>
+		<div><a href="#specs-email" class="act_specs_email">ENVOYER PAR EMAIL<a></div>
+		<hr>
+		<div class="popup-form popup-form-specs-email">
+			<table>
+				<tbody>
+			<tr>
+				<td>email</td>
+				<td><input class="form-email" type="text" name="form-email"></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><div><a href="#specs-email" class="act_specs_email_submit">ENVOYER</a></div></td>
+			</tr>
+				</tbody>
+			</table>
+			
+		</div>
+		<div class="popup-form popup-form-specs-save">
+			<table>
+				<tbody>
+			<tr>
+				<td>email</td>
+				<td><input class="form-email" type="text" name="form-email"></td>
+			</tr>
+			<tr>
+				<td>clé</td>
+				<td><input class="form-key" type="text" name="form-key"></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><div><a href="#specs-save-key" class="act_specs_save_key_submit">ENVOYER</a></div></td>
+			</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 		</div>
 		<!--COL2-->
@@ -1087,7 +1161,7 @@ CONTENT
 	<div class="page footer">
 	</div>
 	<div class="page version">
-	v1.4.8
+	v1.4.9
 	</div>
 </div>
 	</body>
