@@ -3,7 +3,7 @@
 $data=trim($_REQUEST['data']);
 $enc=trim($_REQUEST['enc']);
 $md5=basename(trim($_REQUEST['md5'])); // NEEDS SOME PROTECTION HERE
-$md5=preg_replace('/[^a-zA-Z0-9]/g', "", $md5);
+$md5=preg_replace("/^[a-zA-Z0-9]/", "", $md5);
 
 $mode=trim($_REQUEST['mode']);
 
