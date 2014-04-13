@@ -30,7 +30,7 @@ elseif (($mode == "read") && $md5) {
 elseif (($mode == "email") && !empty($data) && $md5) {
 	$tmpfile=__DIR__."/tmp/$md5.html";
 	file_put_contents(__DIR__."/tmp/$md5.html", $data);
-        $to=trim(base64_decode($_REQUEST['email']));
+        $mailto=trim(base64_decode($_REQUEST['mailto']));
         if ($to && $data) {
             $subject="Cahier Des Charges";
             $content=$data;
@@ -40,6 +40,6 @@ elseif (($mode == "email") && !empty($data) && $md5) {
                   );
             $headers=implode("\r\n", $tab2headers);
 
-            mail($to, $subject, $content, $headers);
+            mail($mailto, $subject, $content, $headers);
         }
 }

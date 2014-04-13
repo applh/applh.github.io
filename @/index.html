@@ -582,7 +582,7 @@ WParty.act_specs_email_submit=function() {
 		var form_email64=base64_encode(form_email);
 	
 		jQuery(".ajax-drive").load("echo.php", 
-										{mode: "email", to: form_email64, enc: "base64", md5: admd5, data : base64post}, 
+										{mode: "email", mailto: form_email64, enc: "base64", md5: admd5, data : base64post}, 
 										function() {			
     									});
     }
@@ -1161,7 +1161,7 @@ CONTENT
 	<div class="page footer">
 	</div>
 	<div class="page version">
-	v1.4.9
+	v1.5.0
 	</div>
 </div>
 	</body>
